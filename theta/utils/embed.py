@@ -7,14 +7,14 @@ from typing import List
 
 import discord
 
-
 class Embed(discord.Embed):
     """A custom embed object."""
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, color=0xe2fe3d, **kwargs)
-        self.set_footer(text="Radia", icon_url="https://cdn.vlee.me.uk/LowInk/RadiaMemcakeMin.png")
-        self.timestamp = datetime.utcnow()
+        super().__init__(*args, color=0x9492BA, **kwargs)
+        self.set_footer(text="Theta", icon_url="https://cdn.discordapp.com/avatars/1256127837799317504/5e6684da64a98d38cadbee398f2a9469?size=1024")
+        self.timestamp = datetime.now(
+        )
 
     @staticmethod
     def list(items: list, *, ordered=False) -> str:

@@ -73,6 +73,7 @@ class HelpCommand(commands.DefaultHelpCommand):
 
     def command_not_found(self, string):
         """Returns message when command is not found."""
+        # noinspection PyTypeChecker
         return f"Command {self.short(string, False)} does not exist."
 
     def subcommand_not_found(self, command, string):

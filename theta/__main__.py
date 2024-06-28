@@ -1,3 +1,4 @@
+# Pulled from IPLSplatoon's radia repo: https://github.com/IPLSplatoon/Radia/blob/master
 """
 Initializes the bot
 
@@ -13,6 +14,7 @@ from discord.ext import commands
 
 from theta import cogs
 from theta.bot import Bot
+from data.prisma import runQueryEngine
 
 # Create Bot
 intents = Intents.all()
@@ -32,6 +34,7 @@ async def run_bot() -> None:
     Loads in cogs and starts bot
     :return: None
     """
+    await runQueryEngine()
     async with bot:
         for cog in cogs.names:
             try:

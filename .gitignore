@@ -1,1 +1,5 @@
 .env
+theta/staticdata/trusted.json
+theta/staticdata/sb_bans.csv
+theta/staticdata/partner_bans.csv
+data/database.db

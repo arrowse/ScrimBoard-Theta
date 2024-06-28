@@ -1,3 +1,4 @@
+# Pulled from IPLSplatoon's radia repo: https://github.com/IPLSplatoon/Radia/blob/master
 # Initiate logging
 
 import os

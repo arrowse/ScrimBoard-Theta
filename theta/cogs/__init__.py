@@ -2,11 +2,11 @@
 
 names = [
     # Main
-    "scrim",
+    # "scrim",
     "setup",
     "misc",
     # Partners
-    "moderation",
+    # "moderation",
     # Admin
     "debugging",
 ]
