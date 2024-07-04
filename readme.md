@@ -4,24 +4,24 @@
 1. Clone the repo with `git clone`
 2. Rename .env.example to .env and input a discord bot token for Theta to connect to
 3. Install requirements with `pip install -r requirements.txt`, I recommend setting up a [virtual environment](https://docs.python.org/3/library/venv.html) first.
-4. In ./theta/staticdata, create a file titled trusted.json, you can simply rename trusted.json.exmaple and input your own Discord user id
+4. In ./theta/staticdata, create a file titled trusted.json; you can simply rename the trusted.json.example and input your own Discord user id.
 5. Using the [prisma cli](https://www.prisma.io/docs/orm/tools/prisma-cli), run `prisma db push —schema ./data/schema.prisma`to create the database
-6. If you have docker, run the docker-compose file with `docker compose up`, if you do not have docker please download it, it’s well worth the learning curve and much easier than it looks at first
+6. If you have docker, run the docker-compose file with `docker compose up`, if you do not have Docker, please download it; it’s well worth the learning curve and much easier than it looks at first
 7. Once the bot is up and running, go to a channel it has access to and run `!sync-all` (if development mode is on) or `$sync-all` (if development mode is off) to sync slash commands to Discord
 8. Enjoy!
 
 ## Why a rewrite?📮
 
-ScrimBoard v1 was not built with scale in mind, it lacks persistence, is slow to update, lacks extensibility should we offer future integrations with other projects, and has a lot of overhead for possible performance optimization and UX improvements.
+ScrimBoard v1 was not built with scale in mind. It lacks persistence, is slow to update, and is not extensible should we offer future integrations with other projects. It also has a lot of overhead for possible performance optimization and UX improvements.
 
 ## Features 🧱
 
 Expecting a magic bullet? We have a brick. It's not even close.
 
-1. Now interacts with message IDs directly meaning it doesn’t need anywhere near as many perms
+1. Now interacts with message IDs directly, meaning it doesn’t need anywhere near as many perms
 2. Rest API allowing for web integration
-3. Persistent posts and data via SQLite to reduce the impact of outages (which should hopefully never happen due to digital Ocean hosting it)
-4. Queue system with Redis to update posts in order at a high speed and integrate with APIs (imagine a co-worker coming over to your desk and leaving a pile of paperwork with no other context, that’s what we’re doing here to ScrimBoard)
+3. Persistent posts and data via SQLite to reduce the impact of outages (which should hopefully never happen due to Digital Ocean hosting it)
+4. Queue system with Redis to update posts in order at a high speed and integrate with APIs (imagine a co-worker coming over to your desk and leaving a pile of paperwork with no other context; that’s what we’re doing here to ScrimBoard)
 
 # User workflows 🔥
 
@@ -33,13 +33,13 @@ Options: “use-this-channel” OR “ create-new-channel ” OR “create-new-c
 
 **Use this channel /  New channel (Basic setup)**
 
-Sends posts to that specific channel, in house scrims are not available. By default, only an all-posts channel will be needed because you can now create scrim posts in any channel that allows bot commands, and a majority of servers do not have enough members / focus on scrims to warrant supporting in-house scrims everywhere.
+Sends global posts to that specific channel. By default, only an all-posts channel will be needed because you can now create scrim posts in any channel that allows bot commands, and a majority of servers do not have enough members/focus on scrims to warrant supporting in-house scrims everywhere.
 
 **New Category (Full setup)**
 
 Creates a category with three channels:
 
-how-to-use (also used for sending announcements / updates)
+how-to-use (also used for sending announcements/updates)
 
 in-house-scrims (in server scrims only)
 
@@ -49,11 +49,11 @@ global-Scrims (scrims from every server)
 
 Command: /scrim-**new**
 
-Options: “Team name” “Skill level / LUTI Division” “More Information” “Screen OK?” “Expiration (default ~3 days, TBD)” “Destination (all-servers or this server)
+Options: “Team name”, “Skill level / LUTI Division”, “More Information”, “Screen OK?”, “Expiration (default ~3 days, TBD)”, “Destination (all-servers or this server)"
 
 /scrim-new makes a post object, sets an expiration, and deletes it after that period using async.io
 
-If ScrimBoard goes down for any reason, upon restart it can check the DB and set the timeouts appropriately.
+If ScrimBoard goes down for any reason, upon restart, it can check the DB and set the timeouts appropriately.
 
 **Accepting a post**
 
@@ -65,17 +65,17 @@ Hit cancel.
 
 **Want to delete it?**
 
-The author can hit cancel to look for another team (if one was already found), which will change the cancel button to a delete button. The author can then hit delete.
+The author can hit cancel to look for another team (if one was already found), changing the cancel button to a delete button. The author can then hit delete.
 
 ### Viewing a post
 
 Command: /scrim-**view**
 
-Shows your current post to you as an ephemeral message, with the accepter’s info attached if relevant alongside the options to cancel or delete your post.
+Shows your current post to you as an ephemeral message, with the accepter’s info attached if relevant, alongside the options to cancel or delete your post.
 
 # Data structures 🌉
 
-Ok but like ehh how do the thing store the value? Objects? What am I, Json Borne?
+Ok but like ehh how do the thing store the value? Objects? What am I, JSON Borne?
 
 **Instance Disk Storage** (.csv, not accessible to anyone without local system access)
 
@@ -141,18 +141,18 @@ __ScrimBoard Core Data (Accessible w/ open APIs via Fast API (tbd), auth token r
 
 **setupNewServer{minimal|local|how-to|complete}()**
 
-1. Check if server is already setup using “not in” to be performant
-2. pin the tail on the donke- I mean upsert. We use upsert. We throw it on the end of the pile if it doesn’t exist and update it if it does.
+1. Check if the server is already setup using “not in” to be performant
+2. pin the tail on the donkey- I mean upsert. We use upsert. We throw it on the end of the pile if it doesn’t exist and update it if it does.
 
 **updateDiscordPost**()
 
-1. If async updates list full or matching POST ID in system
+1. If async updates list full or matching POST ID in the system
 
 *Then*
 
 1. Add to updates list
 2. [Async.io](http://Async.io) update 5+ servers at once (switch case for CRUD, eg discordPostCreate, discordPostUpdate, discordPostDelete, etc)
-3. Remove from updates list returns a list of message IDs which are attached to the post object (or success for delete)
+3. Remove from updates list returns a list of message IDs that are attached to the post object (or success for delete)
 
 **/**scrim = new post
 
