@@ -134,7 +134,7 @@ __ScrimBoard Core Data (Accessible w/ open APIs via Fast API (tbd), auth token r
   * authtoken
 * __✒️GetPost (GET):__ /scrims/author_user_id => 200 / 204 / 400 /401 (OK, No Content, Bad Request, Unauthorized)
   * authtoken
-* __✒️Create (POST):__ /scrims/create/ => 201 / 208 / 400 / 401 (Created, Already Reported (duplicate), Bad Request, Unauthorized)
+* __✒️CreatePost (POST):__ /scrims/create/ => 201 / 208 / 400 / 401 (Created, Already Reported (duplicate), Bad Request, Unauthorized)
   * scrim = {} (see above scrim model)
   * authtoken
   
