@@ -1,4 +1,4 @@
-A few project structure files (__main__.py, bot.py, __init__.py, help.py, and embeds.py) are pulled from the [Radia repository](https://github.com/IPLSplatoon/Radia).
+A few project structure files (main.py, bot.py, init.py, help.py, and embed.py) are pulled from the [Radia repository](https://github.com/IPLSplatoon/Radia).
 
 ### Setting up and running locally:
 
