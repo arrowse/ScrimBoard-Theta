@@ -94,34 +94,38 @@ Ok but like ehh how do the thing store the value? Objects? What am I, JSON Borne
 ---
 
 __ScrimBoard Core Data (Accessible w/ open APIs via Fast API (tbd), auth token required)__
-
-- Servers = {
+```
+Servers = {
     - ScrimBoard Category = [category_id : int]
     - All-post channels = [global_scrims_id : int]
     - In-server-post channels = [local_scrims_id: int]
     - How-to-use channels = [how_to_use_id : int] }
-- SP-Author discord ID  = {
-    - Author = {
+
+SP-Author discord ID  = {
+    Author = {
         - Display name
         - Discord UID
         - PFP URL
         - Origin Server }
-    - Acceptor = {
 
-      Is accepted is implied because Discord ID will be set to None if false and a normal 9-digit ID if true
-
+    Acceptor = {
+      #Is accepted is implied because Discord ID will be set to None if false
+      #and a normal integer ID if true
         - Display name
         - Discord ID
         - PFP URL
         - Origin Server }
-    - StaticScrimInfo = {
+
+    StaticScrimInfo = {
         - Team name
         - Skill level / Division
         - Time / Map List
         - Screen OK?
-    - Expiration period (2-120 hrs) = INT (default 72)
-    - Post Message IDs = [] }
-- BTN-IDs = [button id, button id2, etc]
+        - Expiration period (2-120 HOURS) = INT (DEFAULT 72 HOURS) 
+        - Post Message IDs = [] }
+
+BTN-IDs = [button id, button id2, button id3, ...]
+```
 
 **Buttons!** 🎛️
 
