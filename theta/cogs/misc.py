@@ -38,11 +38,11 @@ class Misc(commands.Cog):
             restricted = True
 
         embed = discord.Embed(title=F"{interaction.user.display_name} ({interaction.user.name})",
-                              description=F" User ID: `{interaction.user.id}`,  {'DMs Open: True,' if dmsopen else ' '} ",
+                              description=F" User ID: `{interaction.user.id}`,  {'DMs Open: True' if dmsopen else ' '} ",
                               color=thetacolors["default"])
         embed.set_thumbnail(url=interaction.user.avatar.url)
         embed.add_field(name="Permissions:",
-                        value=f"{'Developer (root access)' if developer else 'Partner (moderation access)' if partner else 'Restricted (no-post interactions)' if restricted else 'User (post interactions)'}")
+                        value=f"{'Developer (root access)' if developer else 'Partner (moderation access)' if partner else 'Restricted (no-post interactions)' if restricted else 'User'}")
 
         embed.add_field(name="Scrim Post:",
                         value=F"{'Not looking for a scrim.' if not activepost else 'Active post found, you can view it with /scrim-view.'}")

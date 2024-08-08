@@ -80,15 +80,21 @@ async def attach_setup_channels_to_embed(self, embed: discord.Embed, dbCheck):
 
 
 async def clear_channel_topics(self, dbCheck):
-    how_to_use_channel = self.bot.get_channel(dbCheck.how_to_use_id)
-    local_scrims_channel = self.bot.get_channel(dbCheck.local_scrims_id)
-    global_scrims_channel = self.bot.get_channel(dbCheck.global_scrims_id)
-    if dbCheck.how_to_use_id is not None:
-        await how_to_use_channel.edit(topic="")
-    if dbCheck.local_scrims_id is not None:
-        await local_scrims_channel.edit(topic="")
-    if dbCheck.global_scrims_id is not None:
-        await global_scrims_channel.edit(topic="")
+    try:
+        how_to_use_channel = self.bot.get_channel(dbCheck.how_to_use_id)
+        local_scrims_channel = self.bot.get_channel(dbCheck.local_scrims_id)
+        global_scrims_channel = self.bot.get_channel(dbCheck.global_scrims_id)
+        if dbCheck.how_to_use_id is not None:
+            await how_to_use_channel.edit(topic="")
+        if dbCheck.local_scrims_id is not None:
+            await local_scrims_channel.edit(topic="")
+        if dbCheck.global_scrims_id is not None:
+            await global_scrims_channel.edit(topic="")
+    finally:
+        # If the channels were already deleted, or the permissions changed, a variety of errors can occur.
+        # This part of the unlinking process is purely cosmetic, so regardless of if it works the function
+        # should continue and remove the channel IDs from the database.
+        logging.debug('Tried to clear channel topics, continuing')
 
 
 
@@ -273,6 +279,12 @@ class Setup(commands.Cog):
                     local_scrims = await interaction.guild.create_text_channel(name="in-house-scrims", topic="ScrimBoard linked channel - Local", overwrites=overwrites, category=category)
                     global_scrims = await interaction.guild.create_text_channel(name="global-scrims", topic="ScrimBoard linked channel - Global", overwrites=overwrites, category=category)
                     await ServersDB.setupall(server_id=interaction.guild.id, server_name=interaction.guild.name, category=category.id, how_to_use=how_to.id, local_scrims=local_scrims.id, global_scrims=global_scrims.id)
+                    embed = discord.Embed(
+                        title="Setup complete",
+                        description=F"ScrimBoard configured successfully! Global scrims will now be sent to {global_scrims.mention} as they are posted. In-house scrims will be sent to {local_scrims.mention}",
+                        color=thetacolors['default']
+                    )
+                    await interaction.edit_original_response(embed=embed)
                 except discord.Forbidden:
                     embed = discord.Embed(
                         title="Setup failed",

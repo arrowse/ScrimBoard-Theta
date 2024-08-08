@@ -23,7 +23,7 @@
 
 names = [
     # Main
-    # "scrim",
+    "scrim",
     "setup",
     "misc",
     # Partners

@@ -12,10 +12,11 @@ generator client {
 
 // data models
 model postauthor {
-  uid    BigInt     @id @unique
-  name   String
-  pfp    String
-  scrims Scrim[]
+  uid        BigInt     @id @unique
+  name       String
+  pfp        String
+  scrims     Scrim[]
+  messageids Messages[]
 }
 
 model Scrim {
@@ -23,19 +24,25 @@ model Scrim {
   skill_level    String
   info           String
   screen_allowed Boolean
-  server_id      BigInt        @default(0)
+  server_id      BigInt     @default(0)
   created_at     DateTime   @default(now())
   author         postauthor @relation(fields: [author_uid], references: [uid])
-  author_uid     BigInt        @id @unique
+  author_uid     BigInt     @id @unique
   accepter_uid   BigInt
   accepter_name  String
 }
 
+model Messages {
+  author     postauthor @relation(fields: [author_uid], references: [uid])
+  author_uid BigInt     @id @unique
+  message_ID BigInt     @unique
+}
+
 model Server {
-  dserver_id    BigInt    @id @unique
-  name          String
-  category_id   BigInt?
-  how_to_use_id BigInt?
+  dserver_id       BigInt  @id @unique
+  name             String
+  category_id      BigInt?
+  how_to_use_id    BigInt?
   local_scrims_id  BigInt?
   global_scrims_id BigInt?
 }
