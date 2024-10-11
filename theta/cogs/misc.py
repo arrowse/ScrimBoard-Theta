@@ -49,10 +49,10 @@ class Misc(commands.Cog):
                         value=F"{'Not looking for a scrim.' if not activepost else 'Active scrim found.'}")
         if not dmsopen:
             embed.add_field(name="DMs closed", value="In order to accept or create scrims, you'll need to allow DMs "
-                                                     "from any server ScrimBoard is in to receive updates.",)
+                                                     "from any server ScrimBoard is in to receive updates.", inline=False)
         if banned:
             embed.add_field(name="Active ban found", value="You have been an active ScrimBoard ban preventing you "
-                                                           "from creating and accepting scrims.")
+                                                           "from creating and accepting scrims.", inline=False)
         await interaction.edit_original_response(embed=embed)
 
 
