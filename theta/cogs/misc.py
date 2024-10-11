@@ -32,7 +32,7 @@ class Misc(commands.Cog):
         developer = await isdeveloper(ctx)
         dmsopen = await dmcheck(interaction.user)
         banned =  await isScrimBoardBanned(interaction.user.id)
-        restricted = False
+        restricted = await isScrimBoardBanned(interaction.user.id)
         activepost = ScrimDB.check_scrim(interaction.user.id)
 
         if not dmsopen or banned:
@@ -47,13 +47,13 @@ class Misc(commands.Cog):
 
         embed.add_field(name="Scrim Post:",
                         value=F"{'Not looking for a scrim.' if not activepost else 'Active scrim found.'}")
-        await interaction.edit_original_response(embed=embed)
         if not dmsopen:
             embed.add_field(name="DMs closed", value="In order to accept or create scrims, you'll need to allow DMs "
                                                      "from any server ScrimBoard is in to receive updates.",)
         if banned:
             embed.add_field(name="Active ban found", value="You have been an active ScrimBoard ban preventing you "
                                                            "from creating and accepting scrims.")
+        await interaction.edit_original_response(embed=embed)
 
 
 async def setup(bot):
