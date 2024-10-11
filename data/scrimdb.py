@@ -1,4 +1,5 @@
 import logging
+
 from data.prisma import db
 
 class ScrimDB:
@@ -9,42 +10,68 @@ class ScrimDB:
     async def check_scrim(author_id: int):
         scrim = await db.scrim.find_first(
             where={
-                'uid': author_id
+                'author_uid': author_id,
             },
-            select={
-                'scrims': True
-            }
         )
         return scrim
+
+    @staticmethod
+    async def check_author(author_id: int):
+        author = await db.postauthor.find_first(
+            where={
+                'uid': author_id,
+            },
+        )
+        return author
 
     @staticmethod
     async def create_scrim(author_id: int, author_name: str, pfp, team_name, skill_level, info, screen_allowed, server_id):
         scrim = await db.postauthor.upsert(
             where={
-                uid: author_id,
+                'uid': author_id,
             },
             data={
-                uid: author_id,
-                name: author_name,
-                pfp: pfp,
-                scrims: {
-                    teamname: team_name,
-                    skill_level: skill_level,
-                    info: info,
-                    screen_allowed: screen_allowed,
-                    server_id: server_id,
+                'create': {
+                    'uid': author_id,
+                    'name': author_name,
+                    'pfp': pfp,
+                    'scrims': {
+                        'create': {
+                        'teamname': team_name,
+                        'skill_level': skill_level,
+                        'info': info,
+                        'screen_allowed': screen_allowed,
+                        'server_id': server_id,
+                        }
+                    }
+            },
+                'update': {
+                    'uid': author_id,
+                    'name': author_name,
+                    'pfp': pfp,
+                    'scrims': {
+                        'create': {
+                            'teamname': team_name,
+                            'skill_level': skill_level,
+                            'info': info,
+                            'screen_allowed': screen_allowed,
+                            'server_id': server_id,
+                        }
+                    }
                 }
             }
         )
         return scrim
 
-    # Parse an array of the message ids under data using upsert to update the data.
-    # Because the author entry already exists, we don't *need* to use create many.
-    # @staticmethod
-    # async def add_scrim_messages(author_id: int, messageIDs: array):
-    #     scrimmessageids = await db.postauthor.createMany(
-    #         data =
-    #     )
-
+    @staticmethod
+    async def add_scrim_messages(author_id: int, messageIDs: list):
+        formattedMessageArray = []
+        for messageID in messageIDs:
+            dictObject = {'author_uid': author_id, 'messageID': messageID}
+            formattedMessageArray.append(dictObject)
+        await  db.messages.create_many(
+            data=formattedMessageArray,
+            skip_duplicates=True
+        )
     # @staticmethod
     # async def accept_scrim():

@@ -1,1 +1,1 @@
-from .localDataHandler import isdeveloper, ispartner, dmcheck
+from .localDataHandler import isdeveloper, ispartner, dmcheck, isBanned, isScrimBoardBanned

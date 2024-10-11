@@ -2,8 +2,9 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
+from data.scrimdb import ScrimDB
 from theta.utils import thetacolors
-from theta.staticdata import isdeveloper, ispartner, dmcheck
+from theta.staticdata import isdeveloper, ispartner, dmcheck, isScrimBoardBanned
 
 
 class Misc(commands.Cog):
@@ -30,9 +31,9 @@ class Misc(commands.Cog):
         partner = await ispartner(ctx)
         developer = await isdeveloper(ctx)
         dmsopen = await dmcheck(interaction.user)
-        banned = False
+        banned =  await isScrimBoardBanned(interaction.user.id)
         restricted = False
-        activepost = False
+        activepost = ScrimDB.check_scrim(interaction.user.id)
 
         if not dmsopen or banned:
             restricted = True
@@ -45,7 +46,7 @@ class Misc(commands.Cog):
                         value=f"{'Developer (root access)' if developer else 'Partner (moderation access)' if partner else 'Restricted (no-post interactions)' if restricted else 'User'}")
 
         embed.add_field(name="Scrim Post:",
-                        value=F"{'Not looking for a scrim.' if not activepost else 'Active post found, you can view it with /scrim-view.'}")
+                        value=F"{'Not looking for a scrim.' if not activepost else 'Active scrim found.'}")
         await interaction.edit_original_response(embed=embed)
         if not dmsopen:
             embed.add_field(name="DMs closed", value="In order to accept or create scrims, you'll need to allow DMs "

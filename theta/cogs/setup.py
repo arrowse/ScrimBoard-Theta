@@ -179,6 +179,14 @@ class Setup(commands.Cog):
     async def configure(self, interaction: discord.Interaction, options: discord.app_commands.Choice[str]):
         """Setup ScrimBoard in your server, check the status of your current setup, or delete it."""
 
+        if interaction.user.guild_permissions.administrator is False:
+            embed = discord.Embed(
+                title="Setup",
+                description="'You don't have the necessary perms to manage the setup in this server..",
+                color=thetacolors["error"]
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
         logging.debug(F"Choice: {options.value}")
         logging.debug(F"Checking setup for {interaction.guild.name}...")
         currentServerData = await ServersDB.check_server_setup(server_id=interaction.guild_id)

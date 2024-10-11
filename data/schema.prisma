@@ -28,14 +28,14 @@ model Scrim {
   created_at     DateTime   @default(now())
   author         postauthor @relation(fields: [author_uid], references: [uid])
   author_uid     BigInt     @id @unique
-  accepter_uid   BigInt
-  accepter_name  String
+  accepter_uid   BigInt?
+  accepter_name  String?
 }
 
 model Messages {
   author     postauthor @relation(fields: [author_uid], references: [uid])
-  author_uid BigInt     @id @unique
-  message_ID BigInt     @unique
+  author_uid BigInt
+  message_ID BigInt     @id @unique
 }
 
 model Server {

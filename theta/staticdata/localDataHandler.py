@@ -23,6 +23,24 @@ async def ispartner(ctx) -> bool:
         trusted.close()
         return False
 
+async def isBanned(userid):
+    with open("theta/staticdata/partner_bans.csv", "r") as bans:
+        banlist = bans.read()
+        if str(userid) in banlist:
+            return True
+        with open("theta/staticdata/sb_bans.csv", "r") as sbans:
+            banlist = sbans.read()
+            if str(userid) in banlist:
+                return True
+        return False
+
+async def isScrimBoardBanned(userid):
+    with open("theta/staticdata/sb_bans.csv", "r") as sbans:
+        banlist = sbans.read()
+        if str(userid) in banlist:
+            return True
+    return False
+
 
 async def dmcheck(user: discord.User) -> bool:
     try:

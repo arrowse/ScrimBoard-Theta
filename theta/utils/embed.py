@@ -24,7 +24,9 @@
 """Utilities to help with embedding."""
 
 from datetime import datetime
-from typing import List
+
+from .colors import thetacolors
+from data.scrimdb import ScrimDB
 
 import discord
 
@@ -85,3 +87,23 @@ class Embed(discord.Embed):
             True: "\u2705",
             False: "\u274c"
         }[value]
+
+    @staticmethod
+    async def return_active_ban_found(interaction: discord.Interaction):
+        embed = discord.Embed(
+            title=F"No Permission",
+            description="Your account is currently banned from creating or accepting scrims.",
+            color=thetacolors["error"]
+        )
+        await interaction.edit_original_response(embed=embed)
+
+    @staticmethod
+    async def attach_scrim_details(interaction: discord.Interaction, embed: discord.Embed):
+        scrimDetails = await ScrimDB.check_scrim(interaction.user.id)
+        if scrimDetails:
+            embed.set_author(name=f"Posted by {interaction.user.name}", icon_url=interaction.user.avatar.url),
+            embed.add_field(name="Time and info", value=f"{scrimDetails.info}", inline=False)
+            embed.add_field(name="Prior results", value=f"{scrimDetails.skill_level}")
+            embed.add_field(name="Screen Allowed?", value=f"{scrimDetails.screen_allowed}")
+            if scrimDetails.accepter_name:
+                embed.add_field(name="Accepted by",value=f"{scrimDetails.accepter_name} (UID {scrimDetails.accepter_uid})", inline=False)
