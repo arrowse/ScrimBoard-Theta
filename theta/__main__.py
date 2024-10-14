@@ -37,6 +37,7 @@ from discord.ext import commands
 from theta import cogs
 from theta.bot import Bot
 from data.prisma import runQueryEngine
+from theta.utils import process_post_queue
 
 # Create Bot
 intents = Intents.all()
@@ -57,6 +58,8 @@ async def run_bot() -> None:
     :return: None
     """
     await runQueryEngine()
+    asyncio.create_task(process_post_queue())
+
     async with bot:
         for cog in cogs.names:
             try:

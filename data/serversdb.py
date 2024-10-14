@@ -1,6 +1,9 @@
 from builtins import int
 from typing import List, Any
 import logging
+
+from aiohttp.web_routedef import static
+
 from data.prisma import db
 
 
@@ -118,6 +121,15 @@ class ServersDB:
         except Exception as e:
             logging.error(f"Error setting up in-house: {e}")
         return None
+
+    @staticmethod
+    async def get_global_channels():
+        try:
+            servers = await db.server.find_many( distinct=['global_scrims_id'],)
+            logging.debug(servers)
+            return servers
+        except Exception as e:
+            logging.error(f"Error in server fetch operation {e}")
 
     @staticmethod
     async def deletesetup(server_id: int):

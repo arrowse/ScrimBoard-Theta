@@ -1,13 +1,13 @@
 from pydoc import describe
 
 import discord
+import logging
 from discord import app_commands
 from discord.ext import commands
 
-from theta.utils import thetacolors
 from data .scrimdb  import ScrimDB
 from theta.staticdata import isBanned
-from theta.utils import Embed
+from theta.utils import Embed, postQueue, thetacolors
 
 async def send_scrim_embed(interaction: discord.Interaction):
     embed = discord.Embed(
@@ -22,8 +22,8 @@ async def send_scrim_embed(interaction: discord.Interaction):
 async def send_scrim_found(interaction: discord.Interaction):
     embed = discord.Embed(
         title=F"New Scrim",
-        description="You already have an active scrim! ",
-        color=thetacolors["error"]
+        description="You already have an active scrim- Replacing it with the new one.",
+        color=thetacolors["info"]
     )
     await interaction.edit_original_response(embed=embed)
 async def send_scrim_not_found(interaction: discord.Interaction):
@@ -44,14 +44,14 @@ class Scrim(commands.Cog):
 
     @scrim_group.command(name="view", description="Check and manage a current scrim.")
     async def scrim_view(self, interaction: discord.Interaction):
-        postAuthor = await ScrimDB.check_author(interaction.user.id)
+        postAuthor, teamname = await ScrimDB.check_author(interaction.user.id)
         if not await ScrimDB.check_scrim(interaction.user.id):
             embed = discord.Embed(title='Scrim View')
             interaction.response.send_message(embed=embed, ephemeral=True)
             await send_scrim_not_found(interaction)
             return
         embed= discord.Embed(
-            title=f"{postAuthor.name} is looking for a scrim in {interaction.guild.name}" if interaction.guild else f"{postAuthor.name} is looking for a scrim!",
+            title=f"{teamname.teamname} is looking for a scrim in {interaction.guild.name}" if interaction.guild else f"{postAuthor.name} is looking for a scrim!",
             color=thetacolors['default']
         )
         await Embed.attach_scrim_details(interaction, embed)
@@ -79,7 +79,6 @@ class Scrim(commands.Cog):
             return
         if await ScrimDB.check_scrim(interaction.user.id):
             await send_scrim_found(interaction)
-            return
         if interaction.guild.id:
             server_ID = interaction.guild.id
         else:
@@ -95,6 +94,15 @@ class Scrim(commands.Cog):
         # else:
         #     embed.description=f"Your scrim has been sent to this server's in-house scrim channel."
         await interaction.edit_original_response(embed=embed)
+
+        # POST OBJECT ARRAY
+        # [0] - User ID
+        # [1] - Self.bot (client)
+        # [2] - Embed
+        # [3] - Action ['create' OR 'update' OR 'delete']
+        postObject = [interaction.user.id, self.bot, embed, 'create']
+        logging.debug(postObject)
+        postQueue.insert(0, postObject)
 
 
 

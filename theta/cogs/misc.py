@@ -33,7 +33,7 @@ class Misc(commands.Cog):
         dmsopen = await dmcheck(interaction.user)
         banned =  await isScrimBoardBanned(interaction.user.id)
         restricted = await isScrimBoardBanned(interaction.user.id)
-        activepost = ScrimDB.check_scrim(interaction.user.id)
+        activepost = await ScrimDB.check_scrim(interaction.user.id)
 
         if not dmsopen or banned:
             restricted = True

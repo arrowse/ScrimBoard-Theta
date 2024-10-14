@@ -22,7 +22,7 @@
 # SOFTWARE.
 
 """Utilities to help with embedding."""
-
+from code import interact
 from datetime import datetime
 
 from .colors import thetacolors
@@ -101,9 +101,9 @@ class Embed(discord.Embed):
     async def attach_scrim_details(interaction: discord.Interaction, embed: discord.Embed):
         scrimDetails = await ScrimDB.check_scrim(interaction.user.id)
         if scrimDetails:
-            embed.set_author(name=f"Posted by {interaction.user.name}", icon_url=interaction.user.avatar.url),
+            embed.set_author(name=f"Posted by {interaction.user.name}", icon_url=interaction.user.avatar.url, url=f"https://discord.com/channels/@me/{interaction.user.id}"),
             embed.add_field(name="Time and info", value=f"{scrimDetails.info}", inline=False)
             embed.add_field(name="Prior results", value=f"{scrimDetails.skill_level}")
             embed.add_field(name="Screen Allowed?", value=f"{scrimDetails.screen_allowed}")
             if scrimDetails.accepter_name:
-                embed.add_field(name="Accepted by",value=f"{scrimDetails.accepter_name} (UID {scrimDetails.accepter_uid})", inline=False)
+                embed.set_footer(text=f'Accepted by {scrimDetails.accepter_name}', icon_url=scrimDetails.accepter_pfp)

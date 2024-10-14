@@ -26,15 +26,16 @@ model Scrim {
   screen_allowed Boolean
   server_id      BigInt     @default(0)
   created_at     DateTime   @default(now())
-  author         postauthor @relation(fields: [author_uid], references: [uid])
-  author_uid     BigInt     @id @unique
+  author         postauthor @relation(fields: [uid], references: [uid])
+  uid            BigInt     @id @unique
   accepter_uid   BigInt?
   accepter_name  String?
+  accepter_pfp   String?
 }
 
 model Messages {
-  author     postauthor @relation(fields: [author_uid], references: [uid])
-  author_uid BigInt
+  author     postauthor @relation(fields: [uid], references: [uid])
+  uid        BigInt
   message_ID BigInt     @id @unique
 }
 

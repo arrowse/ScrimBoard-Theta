@@ -10,7 +10,7 @@ class ScrimDB:
     async def check_scrim(author_id: int):
         scrim = await db.scrim.find_first(
             where={
-                'author_uid': author_id,
+                'uid': author_id,
             },
         )
         return scrim
@@ -21,43 +21,52 @@ class ScrimDB:
             where={
                 'uid': author_id,
             },
-        )
-        return author
-
-    @staticmethod
-    async def create_scrim(author_id: int, author_name: str, pfp, team_name, skill_level, info, screen_allowed, server_id):
-        scrim = await db.postauthor.upsert(
+        ),
+        teamname = await db.scrim.find_first(
             where={
                 'uid': author_id,
             },
-            data={
+        )
+        return author, teamname
+
+    @staticmethod
+    async def create_scrim(author_id: int, author_name: str, pfp, team_name, skill_level, info, screen_allowed, server_id):
+        postauthor = await db.postauthor.upsert(
+            where={
+                'uid': author_id,
+            },
+            data= {
                 'create': {
                     'uid': author_id,
                     'name': author_name,
                     'pfp': pfp,
-                    'scrims': {
-                        'create': {
-                        'teamname': team_name,
-                        'skill_level': skill_level,
-                        'info': info,
-                        'screen_allowed': screen_allowed,
-                        'server_id': server_id,
-                        }
-                    }
-            },
+                },
                 'update': {
-                    'uid': author_id,
                     'name': author_name,
                     'pfp': pfp,
-                    'scrims': {
-                        'create': {
-                            'teamname': team_name,
-                            'skill_level': skill_level,
-                            'info': info,
-                            'screen_allowed': screen_allowed,
-                            'server_id': server_id,
-                        }
-                    }
+                }
+        }
+        )
+
+        scrim = await db.scrim.upsert(
+            where={
+                'uid': author_id,
+            },
+            data={
+                'create':{
+                    'uid': author_id,
+                    'teamname': team_name,
+                    'skill_level': skill_level,
+                    'info': info,
+                    'screen_allowed': screen_allowed,
+                    'server_id': server_id,
+                },
+                'update':{
+                    'teamname': team_name,
+                    'skill_level': skill_level,
+                    'info': info,
+                    'screen_allowed': screen_allowed,
+                    'server_id': server_id,
                 }
             }
         )
@@ -67,7 +76,7 @@ class ScrimDB:
     async def add_scrim_messages(author_id: int, messageIDs: list):
         formattedMessageArray = []
         for messageID in messageIDs:
-            dictObject = {'author_uid': author_id, 'messageID': messageID}
+            dictObject = {'uid': author_id, 'messageID': messageID}
             formattedMessageArray.append(dictObject)
         await  db.messages.create_many(
             data=formattedMessageArray,
