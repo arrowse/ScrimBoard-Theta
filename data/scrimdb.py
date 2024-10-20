@@ -1,5 +1,3 @@
-import logging
-
 from data.prisma import db
 
 class ScrimDB:
@@ -73,14 +71,20 @@ class ScrimDB:
         return scrim
 
     @staticmethod
-    async def add_scrim_messages(author_id: int, messageIDs: list):
-        formattedMessageArray = []
+    async def add_scrim_messages(author_id: int, messageIDs: list, channels:list):
         for messageID in messageIDs:
-            dictObject = {'uid': author_id, 'messageID': messageID}
-            formattedMessageArray.append(dictObject)
-        await  db.messages.create_many(
-            data=formattedMessageArray,
-            skip_duplicates=True
+          await db.messages.create(
+              data={
+                  'uid': author_id,
+                  'message_ID': messageID,
+                  'channel_ID': channels[messageIDs.index(messageID)]
+              }
         )
-    # @staticmethod
-    # async def accept_scrim():
+    @staticmethod
+    async def get_scrim_messages(author_id: int):
+        scrim_messages = await db.messages.find_many(where={'uid': author_id})
+        return scrim_messages
+    @staticmethod
+    async def garbage_disposal_for_scrim_messages(author_id: int):
+        'yeah'
+        await db.messages.delete_many(where={'uid': author_id})

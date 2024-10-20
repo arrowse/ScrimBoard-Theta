@@ -161,7 +161,7 @@ class Setup(commands.Cog):
         await ctx.channel.edit(topic="ScrimBoard linked channel - Global")
         embed = discord.Embed(
             title="Channel linked",
-            description=f"Global scrims will now be sent to this channel ({ctx.channel.mention}).",
+            description=f"Global scrims will be sent to this channel ({ctx.channel.mention}).",
             color=thetacolors["default"])
         await ctx.send(embed=embed)
 

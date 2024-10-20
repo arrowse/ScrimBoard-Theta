@@ -2,6 +2,8 @@ from pydoc import describe
 
 import discord
 import logging
+
+from aiohttp.web_routedef import static
 from discord import app_commands
 from discord.ext import commands
 
@@ -22,7 +24,7 @@ async def send_scrim_embed(interaction: discord.Interaction):
 async def send_scrim_found(interaction: discord.Interaction):
     embed = discord.Embed(
         title=F"New Scrim",
-        description="You already have an active scrim- Replacing it with the new one.",
+        description="You already have an active scrim- Replacing it with the new one, this will take a minute...",
         color=thetacolors["info"]
     )
     await interaction.edit_original_response(embed=embed)
@@ -79,6 +81,7 @@ class Scrim(commands.Cog):
             return
         if await ScrimDB.check_scrim(interaction.user.id):
             await send_scrim_found(interaction)
+
         if interaction.guild.id:
             server_ID = interaction.guild.id
         else:
@@ -104,6 +107,12 @@ class Scrim(commands.Cog):
         logging.debug(postObject)
         postQueue.insert(0, postObject)
 
+    @staticmethod
+    async def delete_scrim(self, interaction: discord.Interaction):
+        scrim_messages = await ScrimDB.get_scrim_messages(interaction.user.id)
+        for message in scrim_messages:
+            channel : discord.TextChannel = self.bot.get_channel(message.channel_ID)
+            await channel.delete_messages(message.message_ID)
 
 
 async def setup(bot):

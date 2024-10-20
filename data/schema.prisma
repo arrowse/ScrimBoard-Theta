@@ -15,7 +15,7 @@ model postauthor {
   uid        BigInt     @id @unique
   name       String
   pfp        String
-  scrims     Scrim[]
+  scrims     Scrim[] // Author UID is used as a foreign primary key for scrims, scrim messages, and scrim acceptees.
   messageids Messages[]
 }
 
@@ -36,6 +36,7 @@ model Scrim {
 model Messages {
   author     postauthor @relation(fields: [uid], references: [uid])
   uid        BigInt
+  channel_ID BigInt
   message_ID BigInt     @id @unique
 }
 
