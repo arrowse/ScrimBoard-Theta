@@ -17,7 +17,7 @@ postUpdateStack = []
 # [3] - Action ['create' OR 'update' OR 'delete']
 
 async def updatePost(postObject):
-    """Called from the postQueue / postUpdateStack system if the queue has less than 6 posts in it and the incoming post is not a duplicate. See more in utils/queue.py."""
+    """Called from the postQueue / postUpdateStack system if the queue has less than 6 posts in it and the incoming post is not a duplicate."""
     postUpdateStack.insert(0, postObject)
     bot = postObject[1]
     servers = await ServersDB.get_global_channels()
@@ -30,7 +30,8 @@ async def updatePost(postObject):
             await ScrimDB.garbage_disposal_for_scrim_messages(author_id=postObject[0])
             async with asyncio.TaskGroup() as task_group:
                 for i in range(8):
-                    task_group.create_task(send_post(serversSplit[i], postObject[2], postObject[0]))
+                    completed = task_group.create_task(send_post(serversSplit[i], postObject[2], postObject[0]))
+            postUpdateStack.pop(postObject)
         case 'update':
             pass
         case 'delete':
@@ -49,7 +50,8 @@ async def process_post_queue() :
             lastObject = postQueue[-1]
             if lastObject[0] in postUpdateStack:
                 postQueue.insert(0, postQueue.pop(-1))
-            await updatePost(postQueue.pop(-1))
+            else:
+                await updatePost(postQueue.pop(-1))
         await asyncio.sleep(1)
 
 async def send_post(discord_channels, embed, author_id,):

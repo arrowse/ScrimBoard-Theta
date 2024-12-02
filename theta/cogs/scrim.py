@@ -1,9 +1,6 @@
-from pydoc import describe
-
 import discord
 import logging
 
-from aiohttp.web_routedef import static
 from discord import app_commands
 from discord.ext import commands
 
